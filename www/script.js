@@ -4,9 +4,18 @@ $(function() {
 	switch (location.hash) {
 	case '#blocks':
 		window.homeTab = false;
+		window.blocksTab = true;
+		window.minersTab = false;
+		break;
+	case '#miners':
+		window.homeTab = false;
+		window.blocksTab = false;
+		window.minersTab = true;
 		break;
 	default:
 		window.homeTab = true;
+		window.blocksTab = false;
+		window.minersTab = false;
 	}
 	var userLang = (navigator.language || navigator.userLanguage) || 'en-US';
 	window.intlData = { locales: userLang };
@@ -14,22 +23,34 @@ $(function() {
 	var statsTemplate = Handlebars.compile(statsSource);
 	var blocksSource = $("#blocks-template").html();
 	var blocksTemplate = Handlebars.compile(blocksSource);
-	refreshStats(statsTemplate, blocksTemplate);
+	var minersSource = $("#miners-template").html();
+	var minersTemplate = Handlebars.compile(minersSource);
+	refreshStats(statsTemplate, blocksTemplate, minersTemplate);
 
 	$('#homeTab').on('click', function() {
 		window.homeTab = true;
-		refreshStats(statsTemplate, blocksTemplate);
+		window.blocksTab = false;
+		window.minersTab = false;
+		refreshStats(statsTemplate, blocksTemplate, minersTemplate);
 	});
 	$('#blocksTab').on('click', function() {
 		window.homeTab = false;
-		refreshStats(statsTemplate, blocksTemplate);
+		window.blocksTab = true;
+		window.minersTab = false;
+		refreshStats(statsTemplate, blocksTemplate, minersTemplate);
+	});
+	$('#minersTab').on('click', function() {
+		window.homeTab = false;
+		window.blocksTab = false;
+		window.minersTab = true;
+		refreshStats(statsTemplate, blocksTemplate, minersTemplate);
 	});
 	setInterval(function() {
-		refreshStats(statsTemplate, blocksTemplate);
+		refreshStats(statsTemplate, blocksTemplate, minersTemplate);
 	}, 5000)
 });
 
-function refreshStats(statsTemplate, blocksTemplate) {
+function refreshStats(statsTemplate, blocksTemplate, minersTemplate) {
 	$.getJSON("/stats", function(stats) {
 		$("#alert").addClass('hide');
 
@@ -49,8 +70,13 @@ function refreshStats(statsTemplate, blocksTemplate) {
 			html = statsTemplate(stats, { data: { intl: window.intlData } });
 			$('.nav-pills > li > #homeTab').parent().addClass('active');
 		} else {
-			html = blocksTemplate(stats, { data: { intl: window.intlData } });
-			$('.nav-pills > li > #blocksTab').parent().addClass('active');
+			if (window.blocksTab){
+				html = blocksTemplate(stats, { data: { intl: window.intlData } });
+				$('.nav-pills > li > #blocksTab').parent().addClass('active');
+			}else{
+				html = minersTemplate(stats, { data: { intl: window.intlData } });
+				$('.nav-pills > li > #minersTab').parent().addClass('active');
+			}
 		}
 		$('#stats').html(html);
 	}).fail(function() {

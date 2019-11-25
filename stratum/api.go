@@ -87,6 +87,9 @@ func (s *StratumServer) collectMinersStats() (float64, float64, int, []interface
 		stats["invalidShares"] = atomic.LoadInt64(&m.Val.invalidShares)
 		stats["accepts"] = atomic.LoadInt64(&m.Val.accepts)
 		stats["rejects"] = atomic.LoadInt64(&m.Val.rejects)
+		stats["bestShare"] = atomic.LoadInt64(&m.Val.bestShare)
+		stats["difficulty"] = atomic.LoadInt64(&m.Val.difficulty)
+		stats["port"] = m.Val.port
 		if !s.config.Frontend.HideIP {
 			stats["ip"] = m.Val.ip
 		}

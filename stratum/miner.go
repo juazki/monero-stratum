@@ -16,14 +16,19 @@ import (
 )
 
 type Job struct {
-	height      int64
 	sync.RWMutex
 	id          string
 	extraNonce  uint32
+	height      int64
 	submissions map[string]struct{}
 }
 
 type Miner struct {
+	sync.RWMutex
+	id            string
+	ip            string
+	port	      int
+	difficulty    int64
 	lastBeat      int64
 	startedAt     int64
 	validShares   int64
@@ -32,9 +37,7 @@ type Miner struct {
 	accepts       int64
 	rejects       int64
 	shares        map[int64]int64
-	sync.RWMutex
-	id            string
-	ip            string
+	bestShare     int64
 }
 
 func (job *Job) submit(nonce string) bool {
@@ -47,9 +50,9 @@ func (job *Job) submit(nonce string) bool {
 	return false
 }
 
-func NewMiner(id string, ip string) *Miner {
+func NewMiner(id string, ip string, port int, difficulty int64) *Miner {
 	shares := make(map[int64]int64)
-	return &Miner{id: id, ip: ip, shares: shares}
+	return &Miner{id: id, ip: ip, port: port, difficulty: difficulty, shares: shares}
 }
 
 func (cs *Session) getJob(t *BlockTemplate) *JobReplyData {
@@ -203,6 +206,9 @@ func (m *Miner) processShare(s *StratumServer, cs *Session, job *Job, t *BlockTe
 	atomic.AddInt64(&s.roundShares, cs.endpoint.config.Difficulty)
 	atomic.AddInt64(&m.validShares, 1)
 	m.storeShare(cs.endpoint.config.Difficulty)
-	log.Printf("Valid share at difficulty %v/%v", cs.endpoint.config.Difficulty, hashDiff)
+	if (m.bestShare < hashDiff.Int64()) { //Update best share diff
+		atomic.StoreInt64(&m.bestShare, hashDiff.Int64()) 
+	}
+	log.Printf("Valid share at difficulty %v/%v from %v@%v", cs.endpoint.config.Difficulty, hashDiff, m.id, cs.ip)
 	return true
 }
