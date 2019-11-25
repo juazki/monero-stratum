@@ -23,18 +23,18 @@ Dependencies:
 
   * go-1.6
   * Everything required to build Monero
-  * Monero >= **v0.14.0.0** (sometimes `master` branch required)
+  * Monero >= **v0.15.0.1** (sometimes `master` branch required)
 
 ### Linux
 
-Use Ubuntu 16.04 LTS.
+Use Ubuntu 16.04/18.04 LTS.
 
 Compile Monero source (with shared libraries option):
 
     apt-get install git cmake build-essential libssl-dev pkg-config libboost-all-dev
     git clone --recursive https://github.com/monero-project/monero.git
     cd monero
-    git checkout tags/v0.14.0.0 -b v0.14.0.0
+    git checkout tags/v0.15.0.1 -b v0.15.0.1
     cmake -DBUILD_SHARED_LIBS=1 .
     make
 
@@ -60,7 +60,7 @@ Compile Monero source:
 
     git clone --recursive https://github.com/monero-project/monero.git
     cd monero
-    git checkout tags/v0.14.0.0 -b v0.14.0.0
+    git checkout tags/v0.15.0.1 -b v0.15.0.1
     cmake .
     make
 
@@ -154,9 +154,9 @@ You must use `anything.WorkerID` as username in your miner. Either disable addre
 
 ### Donations
 
-**XMR**: `47v4BWeUPFrM9YkYRYk2pkS9CubAPEc7BJjNjg4FvF66Y2oVrTAaBjDZhmFzAXgqCNRvBH2gupQ2gNag2FkP983ZMptvUWG`
+**sammy007**: `47v4BWeUPFrM9YkYRYk2pkS9CubAPEc7BJjNjg4FvF66Y2oVrTAaBjDZhmFzAXgqCNRvBH2gupQ2gNag2FkP983ZMptvUWG`
 
-![](https://cdn.pbrd.co/images/GP5tI1D.png)
+**juazki**: `49rWDokSRR59X3Xf4gtEBB3KE8tJWUUygHG8gPHToiXWQXAumCzhNUqeQRHUW6vcXi1udPbteVWvPETwN9jghuaB8tdPVrn`
 
 Highly appreciated.
 
