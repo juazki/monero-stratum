@@ -10,9 +10,9 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/sammy007/monero-stratum/util"
 	"github.com/sammy007/monero-stratum/cnutil"
 	"github.com/sammy007/monero-stratum/hashing"
-	"github.com/sammy007/monero-stratum/util"
 )
 
 type Job struct {
@@ -72,7 +72,7 @@ func (cs *Session) getJob(t *BlockTemplate) *JobReplyData {
 	}
 	job.submissions = make(map[string]struct{})
 	cs.pushJob(job)
-	reply := &JobReplyData{JobId: job.id, Blob: blob, Target: cs.endpoint.targetHex}
+	reply := &JobReplyData{JobId: job.id, Blob: blob, Target: cs.endpoint.targetHex, SeedHash: t.seedHash, NextSeedHash: t.nextSeedHash}
 	return reply
 }
 

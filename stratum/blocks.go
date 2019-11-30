@@ -17,6 +17,8 @@ type BlockTemplate struct {
 	reservedOffset int
 	prevHash       string
 	buffer         []byte
+	seedHash       string
+	nextSeedHash   string
 }
 
 func (b *BlockTemplate) nextBlob(extraNonce uint32, instanceId []byte) string {
@@ -48,7 +50,7 @@ func (s *StratumServer) fetchBlockTemplate() bool {
 			return false
 		}
 	} else {
-		log.Printf("New block to mine on %s at height %v, diff: %v, prev_hash: %s", r.Name, reply.Height, reply.Difficulty, reply.PrevHash)
+		log.Printf("New block to mine on %s at height %v, diff: %v, prev_hash: %s, seed_hash: %s, next_seed_hash: %s", r.Name, reply.Height, reply.Difficulty, reply.PrevHash, reply.SeedHash, reply.NextSeedHash)
 	}
 	newTemplate := BlockTemplate{
 		diffInt64:      reply.Difficulty,
@@ -56,6 +58,8 @@ func (s *StratumServer) fetchBlockTemplate() bool {
 		height:         reply.Height,
 		prevHash:       reply.PrevHash,
 		reservedOffset: reply.ReservedOffset,
+		seedHash:       reply.SeedHash,
+		nextSeedHash:   reply.NextSeedHash,
 	}
 	newTemplate.buffer, _ = hex.DecodeString(reply.Blob)
 	s.blockTemplate.Store(&newTemplate)
